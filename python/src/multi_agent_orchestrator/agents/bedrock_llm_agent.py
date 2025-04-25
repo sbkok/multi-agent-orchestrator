@@ -414,7 +414,7 @@ class BedrockLLMAgent(Agent):
                         # yield the text chunk
                         yield AgentStreamResponse(text=delta["text"])
                 elif "contentBlockStop" in chunk:
-                    if "input" in tool_use:
+                    if "input" in tool_use and tool_use.get("input"):
                         tool_use["input"] = json.loads(tool_use["input"])
                         content.append({"toolUse": tool_use})
                         tool_use = {}
