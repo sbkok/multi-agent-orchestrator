@@ -419,7 +419,12 @@ class BedrockLLMAgent(Agent):
                         content.append({"toolUse": tool_use})
                         tool_use = {}
                     else:
-                        content.append({"text": text})
+                        # content.append({"text": text})
+                        # text = ""
+
+                        # Only append text content if it's not empty
+                        if text.strip():
+                            content.append({"text": text})
                         text = ""
                 elif "metadata" in chunk:
                     metadata = chunk.get("metadata")
@@ -427,6 +432,10 @@ class BedrockLLMAgent(Agent):
             final_message = ConversationMessage(
                 role=ParticipantRole.ASSISTANT.value, content=message["content"]
             )
+
+            # Ensure we have at least one valid content block
+            if not final_message.content:
+                final_message.content = [{"text": " "}]  # Add a minimal valid content block
 
             kwargs = {
                 "usage": metadata.get("usage"),
