@@ -42,7 +42,7 @@ def message_to_dict(message: ConversationMessage | TimestampedMessage) -> dict[s
                 if "text" in block and not block["text"]:
                     continue
                 # For toolUse blocks, ensure they have valid input
-                if "toolUse" in block and (not block["toolUse"].get("input") or block["toolUse"].get("input") == ""):
+                if "toolUse" in block and not block["toolUse"].get("input"):
                     continue
             filtered_content.append(block)
         content = filtered_content if filtered_content else [{"text": " "}]  # Fallback to avoid empty content
