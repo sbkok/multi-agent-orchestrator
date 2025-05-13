@@ -25,6 +25,22 @@ def conversation_to_dict(
 
 def message_to_dict(message: ConversationMessage | TimestampedMessage) -> dict[str, Any]:
     """Convert a single message to dictionary format."""
+    # Filter out empty content blocks
+    if isinstance(message.content, list):
+        filtered_content = []
+        for block in message.content:
+            if isinstance(block, dict):
+                # For text blocks, ensure they have non-empty text
+                if "text" in block and not block["text"]:
+                    continue
+                # For toolUse blocks, ensure they have valid input
+                if "toolUse" in block and not block["toolUse"].get("input"):
+                    continue
+            filtered_content.append(block)
+        content = filtered_content if filtered_content else [{"text": " "}]  # Fallback to avoid empty content
+    else:
+        content = message.content
+
     result = {
         "role": message.role.value if hasattr(message.role, 'value') else str(message.role),
         "content": message.content

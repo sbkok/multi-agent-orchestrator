@@ -438,9 +438,10 @@ class BedrockLLMAgent(Agent):
                         tool_use["input"] = json.loads(tool_use["input"])
                         content.append({"toolUse": tool_use})
                         tool_use = {}
-                    else:
+                    elif text.strip():
                         content.append({"text": text})
                         text = ""
+
                 elif "metadata" in chunk:
                     metadata = chunk.get("metadata")
 
